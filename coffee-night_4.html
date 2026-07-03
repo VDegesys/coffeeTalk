@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>You Just Don't Get Coffee (Yet) · a 30-minute tasting</title>
+<!--
+  ONE-FILE COMEDY COFFEE DECK · 30:00 total · 11 slides
+  The only external asset is ./coffeePerson.mp4, a sibling file embedded on slide 1.
+  Keys: → / Space / PageDown next · ← / PageUp prev · Home/End · F fullscreen · S speaker notes · ? help
+  On slide 1 only: Enter (or a click on the video) plays/pauses; arrows still navigate.
+-->
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#20150E;            /* deep espresso */
+  --panel:#2C1F15;         /* roast panel */
+  --ink:#F4E8D3;           /* cream */
+  --ink-dim:#C7B295;       /* steamed-milk secondary */
+  --caramel:#DFA050;       /* accent 1 */
+  --terra:#C4623A;         /* accent 2 */
+  --fjord:#7BAF7B;         /* GREEN: reserved exclusively for the fjord-water gag */
+  --purple:#8E6FB8;        /* reserved exclusively for "the purple one" gag */
+  --line:rgba(244,232,211,.16);
+  --display:"Futura","Avenir Next","Trebuchet MS","Segoe UI",system-ui,sans-serif;
+  --body:"Avenir Next","Segoe UI",system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  --snob:Georgia,"Iowan Old Style","Times New Roman",serif; /* the snob always speaks in serif italic */
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg);color:var(--ink);font-family:var(--body);
+  overflow:hidden;line-height:1.45;
+  background-image:radial-gradient(1200px 700px at 70% -10%,rgba(223,160,80,.07),transparent 60%),
+                   radial-gradient(900px 600px at 10% 110%,rgba(196,98,58,.06),transparent 60%);
+}
+::selection{background:var(--caramel);color:var(--bg)}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--caramel);outline-offset:3px;border-radius:6px}
+
+/* ============ DECK CHROME ============ */
+#bar{position:fixed;left:0;top:0;height:4px;width:0;background:linear-gradient(90deg,var(--terra),var(--caramel));z-index:60;transition:width .35s ease}
+#counter{position:fixed;right:18px;bottom:14px;z-index:60;font-size:13px;letter-spacing:.14em;color:var(--ink-dim)}
+#keyhint{position:fixed;left:18px;bottom:14px;z-index:60;font-size:12px;letter-spacing:.1em;color:var(--ink-dim);opacity:.8;transition:opacity .8s ease}
+#keyhint.gone{opacity:0;pointer-events:none}
+#keyhint kbd{margin:0 2px}
+kbd{font:600 11px/1 var(--body);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:3px 6px;background:var(--panel);color:var(--ink)}
+
+/* ============ SLIDES ============ */
+.deck{position:fixed;inset:0}
+.slide{
+  position:absolute;inset:0;display:grid;place-items:center;
+  padding:5vh 5.5vw 7vh;opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .35s ease; /* transitions stay minimal; the animation budget lives inside the illustrations */
+}
+.slide.active{opacity:1;visibility:visible;pointer-events:auto}
+.frame{width:min(1480px,100%);max-height:100%}
+.eyebrow{
+  font-family:var(--display);font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  font-size:clamp(10px,1.05vw,14px);color:var(--caramel);display:flex;gap:1.2em;align-items:center;flex-wrap:wrap
+}
+.eyebrow .clock{color:var(--ink-dim);letter-spacing:.14em}
+h1.display,h2.display{
+  font-family:var(--display);font-weight:800;letter-spacing:-.015em;line-height:.98;
+  font-size:clamp(38px,5.8vw,92px);margin:.35em 0 .3em
+}
+h2.display{font-size:clamp(30px,4.4vw,68px)}
+.lede{font-size:clamp(16px,1.5vw,22px);color:var(--ink-dim);max-width:56ch}
+.truth{
+  border-left:4px solid var(--caramel);padding:.55em 0 .55em 1em;margin-top:1.1em;
+  font-size:clamp(16px,1.5vw,22px);max-width:60ch
+}
+.truth b{color:var(--caramel)}
+.grid2{display:grid;grid-template-columns:1.05fr 1fr;gap:3.5vw;align-items:center}
+@media (max-width:900px),(max-aspect-ratio:6/5){
+  .grid2{grid-template-columns:1fr;gap:3vh}
+  .slide{padding:4vh 6vw 8vh;overflow:auto}
+}
+
+/* Snob / Casual dialogue device, reused on most slides */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:1.2vw;margin-top:1.2em}
+.say{border:1px solid var(--line);border-radius:16px;padding:.9em 1.1em;background:rgba(44,31,21,.55)}
+.say .who{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:.4em}
+.say.snob .who{color:var(--terra)}
+.say.casual .who{color:var(--caramel)}
+.say.snob p{font-family:var(--snob);font-style:italic;font-size:clamp(15px,1.35vw,20px)}
+.say.casual p{font-size:clamp(15px,1.35vw,20px)}
+@media (max-width:700px){.duo{grid-template-columns:1fr}}
+
+/* Tasting / smelling cue chips */
+.cue{
+  display:inline-flex;align-items:center;gap:.6em;margin-top:1.3em;
+  border-radius:999px;padding:.55em 1.1em;font-family:var(--display);font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;font-size:clamp(11px,1.05vw,14px);color:var(--bg)
+}
+.cue.taste{background:var(--terra);color:var(--ink)}
+.cue.smell{background:var(--caramel);color:var(--bg)}
+.cue .dot{width:9px;height:9px;border-radius:50%;background:currentColor;animation:cuePulse 1.6s ease-in-out infinite}
+@keyframes cuePulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
+
+.footnote{margin-top:1.2em;font-size:clamp(12px,1.1vw,15px);color:var(--ink-dim)}
+.footnote b{color:var(--ink)}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.3em .9em;margin:.25em .35em .25em 0;font-size:clamp(12px,1.1vw,15px);color:var(--ink)}
+.chip.purple{border-color:var(--purple);color:var(--purple)}      /* the purple one */
+.chip.green{border-color:var(--fjord);color:var(--fjord)}          /* fjord water only */
+
+/* Illustrations share a stage */
+.stage{width:100%;height:auto;display:block}
+.stage text{font-family:var(--body)}
+.caption{font-size:clamp(12px,1.1vw,15px);color:var(--ink-dim);text-align:center;margin-top:.6em}
+
+/* ============ SLIDE 1 · VIDEO ============ */
+.s-video{padding:0}
+.videowrap{position:relative;width:100%;height:100%;background:#000;overflow:hidden}
+.videowrap video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;background:#000}
+.bigplay{
+  position:absolute;inset:0;margin:auto;width:clamp(90px,10vw,140px);height:clamp(90px,10vw,140px);
+  border-radius:50%;background:rgba(223,160,80,.94);display:grid;place-items:center;
+  transition:transform .2s ease,opacity .25s ease;box-shadow:0 12px 50px rgba(0,0,0,.55)
+}
+.bigplay:hover{transform:scale(1.06)}
+.bigplay.hide{opacity:0;pointer-events:none}
+.bigplay svg{width:42%;height:42%;fill:var(--bg);margin-left:6%}
+
+/* ============ SLIDE 2 · COLD OPEN ============ */
+.duo-art .person{opacity:0;transform:translateY(24px)}
+.slide.active .duo-art .person.p1{animation:riseIn .7s ease .15s both}
+.slide.active .duo-art .person.p2{animation:riseIn .7s ease .4s both}
+@keyframes riseIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+/* ============ SLIDE 3 · CHERRY ============ */
+.slide.active .ring{transform-origin:230px 215px;animation:ringIn .6s cubic-bezier(.2,.8,.3,1.2) both}
+.slide.active .ring.r1{animation-delay:.25s}
+.slide.active .ring.r2{animation-delay:.55s}
+.slide.active .ring.r3{animation-delay:.85s}
+.slide.active .ring.r4{animation-delay:1.15s}
+@keyframes ringIn{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+.slide.active .ring-label{animation:fadeIn .5s ease both}
+.slide.active .ring-label.l1{animation-delay:.5s}
+.slide.active .ring-label.l2{animation-delay:.8s}
+.slide.active .ring-label.l3{animation-delay:1.1s}
+.slide.active .ring-label.l4{animation-delay:1.4s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.slide.active .cherry-bob{animation:bob 3.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* ============ SLIDE 4 · BEAN BELT ============ */
+.slide.active .landmass{animation:fadeIn .9s ease both}
+.slide.active .belt-band{animation:beltGlow 2.6s ease-in-out infinite .3s}
+@keyframes beltGlow{0%,100%{opacity:.28}50%{opacity:.5}}
+.slide.active .equator{stroke-dasharray:10 8;animation:dashSpin 9s linear infinite}
+@keyframes dashSpin{to{stroke-dashoffset:-180}}
+.origin-dot circle.ping{transform-origin:center;transform-box:fill-box}
+.slide.active .origin-dot circle.ping{animation:ping 2.2s ease-out infinite}
+.slide.active .origin-dot.o2 circle.ping{animation-delay:.7s}
+.slide.active .origin-dot.o3 circle.ping{animation-delay:1.4s}
+@keyframes ping{0%{transform:scale(.4);opacity:.9}80%,100%{transform:scale(2.6);opacity:0}}
+
+/* ============ SLIDE 5 · ALTITUDE ============ */
+.slide.active .mtn{transform-origin:bottom center;animation:mtnRise 1s cubic-bezier(.2,.8,.3,1) both}
+.slide.active .mtn.m2{animation-delay:.15s}
+.slide.active .mtn.m3{animation-delay:.3s}
+@keyframes mtnRise{from{transform:translateY(60px) scaleY(.65);opacity:0}to{transform:none;opacity:1}}
+.slide.active .marker{animation:climb 1.4s cubic-bezier(.3,.9,.3,1) both .7s}
+.slide.active .marker.k2{animation-delay:.9s}
+.slide.active .marker.k3{animation-delay:1.1s}
+.slide.active .marker.k4{animation-delay:1.3s}
+@keyframes climb{from{transform:translateY(var(--rise));opacity:0}to{transform:none;opacity:1}}
+.slide.active .altline{stroke-dasharray:14 10;animation:dashSpin 7s linear infinite}
+.slide.active .altline-tag{animation:fadeIn .6s ease 1.7s both}
+
+/* ============ SLIDE 6 · BLEND VS SINGLE ============ */
+.pour{stroke-dasharray:340;stroke-dashoffset:340;fill:none;stroke-linecap:round}
+.slide.active .pour{animation:pourIn 1.2s ease-out both .3s}
+.slide.active .pour.q2{animation-delay:.55s}
+.slide.active .pour.q3{animation-delay:.8s}
+.slide.active .pour.q4{animation-delay:.5s}
+@keyframes pourIn{to{stroke-dashoffset:0}}
+
+/* ============ SLIDE 7 · ROAST ============ */
+.slide.active .bean-step{animation:riseIn .55s ease both}
+.slide.active .bean-step:nth-of-type(2){animation-delay:.12s}
+.slide.active .bean-step:nth-of-type(3){animation-delay:.24s}
+.slide.active .bean-step:nth-of-type(4){animation-delay:.36s}
+.slide.active .bean-step:nth-of-type(5){animation-delay:.48s}
+.slide.active .fadebar{animation:barGrow 1.2s ease .7s both;transform-origin:left center}
+@keyframes barGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* ============ SLIDE 8 · FLAVOR WHEEL ============ */
+.wheelbox{position:relative;max-width:min(46vh,520px);margin:0 auto}
+.slide.active .wheel-rot{transform-origin:50% 50%;animation:wheelSpin 1.7s cubic-bezier(.25,.8,.25,1) both}
+@keyframes wheelSpin{from{transform:rotate(-540deg)}to{transform:rotate(0)}}
+.wheel-center{
+  position:absolute;inset:0;display:grid;place-items:center;text-align:center;pointer-events:none
+}
+.wheel-center .inner{max-width:56%}
+.wheel-center .cname{font-family:var(--display);font-weight:800;font-size:clamp(14px,1.4vw,20px);line-height:1.15}
+.wheel-center .cmeta{font-size:clamp(10px,.95vw,13px);color:var(--ink-dim);margin-top:.35em}
+.wheel-center .cnotes{font-family:var(--snob);font-style:italic;color:var(--caramel);font-size:clamp(12px,1.15vw,16px);margin-top:.45em}
+.wheel .seg{transition:opacity .3s ease;cursor:pointer}
+.wheel.picked .seg{opacity:.18}
+.wheel.picked .seg.on{opacity:1}
+.coffee-keys{display:flex;flex-wrap:wrap;gap:.5em;margin-top:1em}
+.coffee-keys button{
+  border:1px solid var(--line);border-radius:12px;padding:.55em .9em;text-align:left;
+  font-size:clamp(12px,1.1vw,15px);background:rgba(44,31,21,.55);transition:border-color .2s,transform .15s
+}
+.coffee-keys button:hover{transform:translateY(-2px)}
+.coffee-keys button.on{border-color:var(--caramel);background:rgba(223,160,80,.14)}
+.coffee-keys kbd{margin-right:.55em}
+.xtract{display:grid;grid-template-columns:1fr 1fr;gap:1vw;margin-top:1.1em}
+.xtract .say{padding:.7em .9em}
+@media (max-width:700px){.xtract{grid-template-columns:1fr}}
+
+/* ============ SLIDE 9 · WATER / FRESHNESS ============ */
+.slide.active .jar-water{animation:goGreen 3.2s ease 1s both}
+@keyframes goGreen{from{fill:#BFD4DA}to{fill:var(--fjord)}}   /* the water goes green on stage */
+.slide.active .algae{animation:fadeIn 1s ease both}
+.slide.active .algae.a1{animation-delay:2.4s}
+.slide.active .algae.a2{animation-delay:2.9s}
+.slide.active .algae.a3{animation-delay:3.4s}
+.slide.active .stamp{animation:stampIn .5s cubic-bezier(.2,.8,.3,1.4) 1.6s both;transform-origin:center}
+@keyframes stampIn{from{opacity:0;transform:scale(2.2) rotate(-14deg)}to{opacity:1;transform:scale(1) rotate(-8deg)}}
+
+/* ============ SLIDE 8 · BREW METHODS ============ */
+.slide.active .brew-dot{animation:riseIn .5s ease both}
+.slide.active .brew-dot.b7{animation-delay:.08s}
+.slide.active .brew-dot.b2{animation-delay:.16s}
+.slide.active .brew-dot.b3{animation-delay:.24s}
+.slide.active .brew-dot.b4{animation-delay:.36s}
+.slide.active .brew-dot.b5{animation-delay:.48s}
+.slide.active .brew-dot.b6{animation-delay:.7s}
+
+/* rest-window curve on the water slide */
+.rest-path{stroke-dasharray:640;stroke-dashoffset:640}
+.slide.active .rest-path{animation:drawPath 1.6s ease 1.4s both}
+@keyframes drawPath{to{stroke-dashoffset:0}}
+.slide.active .rest-dot{animation:fadeIn .5s ease 2.8s both}
+.slide.active .rest-labels{animation:fadeIn .6s ease 3s both}
+
+/* ============ SLIDE 11 · FINALE ============ */
+.s-final{text-align:center}
+.s-final .dead{
+  font-family:var(--snob);font-style:italic;color:var(--ink-dim);
+  font-size:clamp(18px,2.2vw,32px);text-decoration:line-through;text-decoration-color:var(--terra);text-decoration-thickness:3px
+}
+.slide.active .final-line{animation:riseIn .8s ease .5s both}
+.montage{margin-top:2em;display:flex;flex-wrap:wrap;gap:.5em;justify-content:center}
+.slide.active .montage .chip{opacity:0;animation:riseIn .5s ease both}
+.slide.active .montage .chip:nth-child(1){animation-delay:1.1s}
+.slide.active .montage .chip:nth-child(2){animation-delay:1.3s}
+.slide.active .montage .chip:nth-child(3){animation-delay:1.5s}
+.slide.active .montage .chip:nth-child(4){animation-delay:1.7s}
+.slide.active .montage .chip:nth-child(5){animation-delay:1.9s}
+
+/* ============ NOTES DRAWER (press S) ============ */
+#notesPanel{
+  position:fixed;left:0;right:0;bottom:0;z-index:70;transform:translateY(102%);
+  transition:transform .3s ease;background:#180F09;border-top:2px solid var(--caramel);
+  padding:14px 22px 18px;font-size:14px;max-height:34vh;overflow:auto
+}
+#notesPanel.open{transform:none}
+#notesPanel .nt{color:var(--ink-dim)}
+#notesPanel b{color:var(--caramel);font-family:var(--display);letter-spacing:.1em;text-transform:uppercase;font-size:11px;margin-right:.4em}
+#notesPanel .row{margin:.3em 0}
+
+/* ============ HELP OVERLAY (press ?) ============ */
+#help{
+  position:fixed;inset:0;z-index:80;background:rgba(24,15,9,.92);display:grid;place-items:center;
+  opacity:0;visibility:hidden;transition:opacity .25s
+}
+#help.open{opacity:1;visibility:visible}
+#help .sheet{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:2em 2.4em;max-width:520px;width:90%}
+#help h3{font-family:var(--display);font-weight:800;letter-spacing:.08em;margin-bottom:.8em}
+#help .krow{display:flex;justify-content:space-between;gap:2em;padding:.4em 0;border-bottom:1px solid var(--line);font-size:14px}
+#help .krow:last-child{border-bottom:none}
+#help .krow span:last-child{color:var(--ink-dim)}
+
+/* ============ REDUCED MOTION: every illustration lands on its final frame ============ */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  .duo-art .person,.montage .chip{opacity:1 !important;transform:none !important}
+  .pour,.rest-path{stroke-dashoffset:0 !important}
+  .jar-water{fill:var(--fjord) !important}
+}
+</style>
+</head>
+<body>
+<div id="bar" aria-hidden="true"></div>
+<div id="counter" aria-live="polite">1 / 11</div>
+<div id="keyhint"><kbd>?</kbd> keys · <kbd>S</kbd> notes · <kbd>F</kbd> fullscreen</div>
+
+<main class="deck" id="deck">
+<!-- ============================================================
+     SLIDE 1 · THE VIDEO · target 1:00
+     The sibling file ./coffeePerson.mp4 is embedded here, full-bleed.
+     Wiring (see script at bottom): Enter or a click plays/pauses;
+     arrow keys ALWAYS navigate; leaving this slide auto-pauses and
+     resets the video. No autoplay with sound (browsers block it).
+     ============================================================ -->
+<section class="slide s-video" aria-label="Slide 1: the sketch">
+  <div class="videowrap">
+    <video id="sketch" preload="metadata" playsinline
+      poster="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%2320150E'/%3E%3Ctext x='800' y='420' fill='%23F4E8D3' font-family='Georgia' font-size='76' font-style='italic' text-anchor='middle'%3E2 Types of Coffee People%3C/text%3E%3Ctext x='800' y='495' fill='%23DFA050' font-family='Georgia' font-size='34' text-anchor='middle'%3Ea short film%3C/text%3E%3C/svg%3E">
+      <source src="./coffeePerson.mp4" type="video/mp4">
+      Your browser could not load coffeePerson.mp4. Check that it sits next to this file.
+    </video>
+    <button id="playBtn" class="bigplay" aria-label="Play the sketch">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17l14-8.5z"/></svg>
+    </button>
+  </div>
+  <div class="notes" hidden>
+    <div class="row"><b>Controls</b><span class="nt">Enter or a click plays and pauses. Arrow keys always navigate. When it ends, press → straight into the cold open.</span></div>
+    <div class="row"><b>Setup</b><span class="nt">Lights down. Play it. Say nothing until it ends.</span></div>
+    <div class="row"><b>Pour</b><span class="nt">While it plays, quietly pre-pour the cafeteria batch, 1 to 2 oz per person.</span></div>
+    <div class="row"><b>Time</b><span class="nt">1:00</span></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 2 · COLD OPEN · target 2:00
+     GAG SEEDED: "the purple one" (paid off right here against the
+     cafeteria baseline, and again in the finale montage).
+     TASTING CUE: the cafeteria coffee, the comedic "before."
+     ============================================================ -->
+<section class="slide s-open" aria-label="Slide 2: cold open">
+  <div class="frame grid2">
+    <div>
+      <div class="eyebrow">Cold open <span class="clock">1:30</span></div>
+      <h1 class="display">So... which one were you?</h1>
+      <p class="lede">That sketch had two people in it. Tonight sides with both. In the next thirty minutes you will know what the snob knows, and you can keep drinking whatever you already like.</p>
+      <div class="cue taste"><span class="dot"></span>Taste: the cafeteria batch. This is the before.</div>
+      <p class="footnote">No tasting notes on this one. It is the baseline. Think of it as <span class="chip purple">the purple one</span>. We will come back to it.</p>
+    </div>
+    <div>
+      <!-- Original SVG: the Snob and the Casual, our recurring two-character device -->
+      <svg class="stage duo-art" viewBox="0 0 560 420" role="img" aria-label="Two illustrated characters: a stern coffee snob with a tiny cup and a happy casual drinker with a big mug">
+        <g class="person p1">
+          <rect x="70" y="230" width="150" height="160" rx="26" fill="#3A2A1C"/>
+          <rect x="118" y="196" width="54" height="46" rx="10" fill="#3A2A1C"/>
+          <circle cx="145" cy="160" r="52" fill="#E8C9A0"/>
+          <path d="M96 142 q49 -44 98 0 l0 -18 q-49 -40 -98 0 z" fill="#2C1F15"/>
+          <circle cx="127" cy="162" r="13" fill="none" stroke="#20150E" stroke-width="4"/>
+          <circle cx="163" cy="162" r="13" fill="none" stroke="#20150E" stroke-width="4"/>
+          <line x1="140" y1="162" x2="150" y2="162" stroke="#20150E" stroke-width="4"/>
+          <path d="M131 190 q14 -6 28 0" stroke="#20150E" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M228 300 a16 16 0 0 1 0 30" fill="none" stroke="#C4623A" stroke-width="6"/>
+          <rect x="196" y="292" width="34" height="42" rx="8" fill="#F4E8D3"/>
+          <path d="M198 288 q8 -12 6 -20 M212 288 q8 -12 6 -20" stroke="#C7B295" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <text x="145" y="412" text-anchor="middle" fill="#C7B295" font-size="15" letter-spacing="2">THE SNOB · 40ml, single origin</text>
+        </g>
+        <g class="person p2">
+          <rect x="340" y="230" width="150" height="160" rx="26" fill="#4A3524"/>
+          <path d="M340 262 q75 30 150 0 l0 -20 q-75 26 -150 0 z" fill="#3A2A1C"/>
+          <circle cx="415" cy="160" r="52" fill="#E8C9A0"/>
+          <path d="M366 148 q49 -50 98 0 l0 -24 q-49 -44 -98 0 z" fill="#5E3B24"/>
+          <circle cx="397" cy="160" r="5" fill="#20150E"/>
+          <circle cx="433" cy="160" r="5" fill="#20150E"/>
+          <path d="M395 186 q20 16 40 0" stroke="#20150E" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <rect x="452" y="270" width="64" height="70" rx="12" fill="#8E6FB8"/>
+          <path d="M516 284 a20 20 0 0 1 0 42" fill="none" stroke="#8E6FB8" stroke-width="8"/>
+          <path d="M466 262 q8 -14 4 -24 M484 262 q8 -14 4 -24 M500 262 q8 -14 4 -24" stroke="#C7B295" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <text x="415" y="412" text-anchor="middle" fill="#C7B295" font-size="15" letter-spacing="2">THE CASUAL · the purple one</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="notes" hidden>
+    <div class="row"><b>Setup</b><span class="nt">"So... which one were you?" Quick show of hands, keep it light, no one has to commit.</span></div>
+    <div class="row"><b>Land</b><span class="nt">The promise: by the end you will know what the snob knows, minus the attitude.</span></div>
+    <div class="row"><b>Pour</b><span class="nt">TASTE the cafeteria baseline now. Do not describe it. It is the before.</span></div>
+    <div class="row"><b>Time</b><span class="nt">1:30</span></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 3 · COFFEE IS A FRUIT · target 3:00
+     SMELLING CUE: pass the whole roasted beans while talking.
+     Illustration: cherry beside an animated cross-section whose
+     rings pop in one by one, ending on the seed = your "bean."
+     ============================================================ -->
+<section class="slide" aria-label="Slide 3: coffee is a fruit">
+  <div class="frame grid2">
+    <div>
+      <div class="eyebrow">Lesson one <span class="clock">2:30</span></div>
+      <h1 class="display">Coffee is a fruit.</h1>
+      <div class="duo">
+        <div class="say snob"><div class="who">The Snob</div><p>"This washed lot expresses remarkable mucilage clarity."</p></div>
+        <div class="say casual"><div class="who">The Casual</div><p>"It's a bean."</p></div>
+      </div>
+      <p class="truth">It is neither. It is a <b>cherry</b>, and the "bean" is the <b>seed</b> inside. Everything you have ever brewed started as the pit of a fruit.</p>
+      <div class="cue smell"><span class="dot"></span>Smell: pass the whole beans around now</div>
+      <p class="footnote"><b>Two words worth knowing:</b> "washed" means the fruit is washed off before the seed dries. "Natural" means the seed dries inside the fruit, which leaves it fruitier and wilder.</p>
+    </div>
+    <div>
+      <svg class="stage" viewBox="0 0 560 430" role="img" aria-label="A coffee cherry next to a cross-section showing skin, fruit, parchment, and the seed">
+        <!-- whole cherry -->
+        <g class="cherry-bob">
+          <path d="M118 96 q6 -44 46 -56" fill="none" stroke="#6B7B4A" stroke-width="8" stroke-linecap="round"/>
+          <path d="M164 40 q44 -6 52 30 q-40 14 -52 -30z" fill="#6B7B4A"/>
+          <circle cx="112" cy="180" r="86" fill="#B23A2E"/>
+          <circle cx="86" cy="152" r="22" fill="#D46A4A" opacity=".7"/>
+          <text x="112" y="300" text-anchor="middle" fill="#C7B295" font-size="15" letter-spacing="2">A COFFEE CHERRY</text>
+        </g>
+        <path d="M220 190 h60 m-14 -12 l16 12 l-16 12" stroke="#DFA050" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- cross-section: rings animate in from the outside toward the seed -->
+        <g>
+          <circle class="ring r1" cx="410" cy="215" r="118" fill="#B23A2E"/>
+          <circle class="ring r2" cx="410" cy="215" r="96" fill="#D46A4A"/>
+          <circle class="ring r3" cx="410" cy="215" r="70" fill="#E8D3A8"/>
+          <g class="ring r4">
+            <path d="M406 158 q-42 14 -42 57 q0 43 42 57 q10 -57 0 -114z" fill="#8FA36B"/>
+            <path d="M414 158 q42 14 42 57 q0 43 -42 57 q-10 -57 0 -114z" fill="#7C9059"/>
+            <line x1="410" y1="164" x2="410" y2="266" stroke="#5F7042" stroke-width="4"/>
+          </g>
+          <g fill="#F4E8D3" font-size="15">
+            <g class="ring-label l1"><line x1="410" y1="97" x2="410" y2="70" stroke="#C7B295" stroke-width="2"/><text x="410" y="58" text-anchor="middle">skin</text></g>
+            <g class="ring-label l2"><line x1="502" y1="180" x2="532" y2="164" stroke="#C7B295" stroke-width="2"/><text x="536" y="158" >fruit</text></g>
+            <g class="ring-label l3"><line x1="474" y1="250" x2="516" y2="286" stroke="#C7B295" stroke-width="2"/><text x="520" y="302">parchment</text></g>
+            <g class="ring-label l4"><line x1="410" y1="284" x2="410" y2="330" stroke="#DFA050" stroke-width="2"/><text x="410" y="352" text-anchor="middle" fill="#DFA050" font-size="17" font-weight="700">the seed. your "bean."</text></g>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="notes" hidden>
+    <div class="row"><b>Setup</b><span class="nt">Deliver the mucilage line dead serious. Beat. "It's a bean" gets the laugh.</span></div>
+    <div class="row"><b>Land</b><span class="nt">Cherry, seed inside, we roast the pit. Washed vs natural in one sentence each, general concept only.</span></div>
+    <div class="row"><b>Pour</b><span class="nt">SMELL whole beans while you talk. Two bags circulating keeps it moving.</span></div>
+    <div class="row"><b>Time</b><span class="nt">2:30</span></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 4 · THE BEAN BELT + VARIETY · target 2:00
+     Real varieties on the table tonight: heirloom, bishari,
+     pink bourbon, Castillo. Continent-outline world map with the
+     belt highlighted and the three origins dotted at true lat/lon.
+     ============================================================ -->
+<section class="slide" aria-label="Slide 4: the bean belt and variety">
+  <div class="frame grid2">
+    <div>
+      <div class="eyebrow">Where it grows <span class="clock">2:00</span></div>
+      <h1 class="display">The Bean Belt.</h1>
+      <p class="lede">Coffee grows in a band around the equator, roughly tropic to tropic. Every bag on this table came from somewhere inside it.</p>
+      <p class="truth"><b>Variety</b> is the plant's grape: cabernet vs pinot, but for coffee. Different variety, different flavor ceiling, before anyone roasts or brews a thing.</p>
+      <p class="footnote"><b>On the table tonight:</b>
+        <span class="chip">heirloom</span><span class="chip">bishari</span><span class="chip">pink bourbon</span><span class="chip">Castillo</span><br>
+        All real variety names, all printed on the bags.</p>
+    </div>
+    <div>
+      <!-- Equirectangular world map, continent outlines drawn from real
+           lat/lon vertices. Origin dots sit at true coordinates:
+           Costa Rica (192,161), Colombia (209,171), Ethiopia (437,167). -->
+      <svg class="stage" viewBox="0 0 720 360" role="img" aria-label="A world map with continent outlines, the coffee belt highlighted between the tropics, and dots marking Costa Rica, Colombia, and Ethiopia">
+        <rect x="0" y="16" width="720" height="296" rx="14" fill="#271B12" stroke="rgba(244,232,211,.14)" stroke-width="1.5"/>
+        <g class="landmass" fill="#4A3524" stroke="rgba(244,232,211,.28)" stroke-width="1" stroke-linejoin="round">
+            <path d="M24 50 L28 60 L44 64 L56 60 L80 60 L90 66 L100 72 L110 82 L112 94 L116 106 L126 114 L140 134 L150 140 L168 148 L176 151 L186 155 L190 159 L194 163 L201 163 L196 160 L192 155 L184 149 L180 138 L178 143 L168 142 L166 134 L166 126 L174 121 L182 122 L192 120 L196 126 L198 130 L200 127 L200 124 L198 118 L202 114 L208 110 L210 104 L212 100 L220 96 L228 92 L240 88 L254 86 L248 76 L240 70 L232 60 L220 56 L208 54 L200 64 L188 68 L176 64 L180 54 L170 48 L150 44 L120 42 L90 42 L60 40 L46 38 L30 44 Z"/>
+            <path d="M206 164 L209 159 L217 156 L224 158 L232 159 L240 163 L250 168 L258 172 L260 180 L266 182 L272 186 L284 188 L290 192 L286 200 L282 206 L282 214 L278 224 L268 228 L264 232 L260 240 L254 248 L244 248 L236 258 L232 262 L230 270 L226 274 L224 280 L218 288 L214 286 L212 280 L214 272 L216 264 L218 256 L218 246 L220 236 L220 226 L220 216 L216 214 L210 210 L204 200 L198 192 L198 188 L200 182 L204 178 L206 174 L204 168 Z"/>
+            <path d="M348 110 L360 107 L380 106 L382 112 L390 115 L400 116 L410 117 L420 117 L424 120 L426 124 L430 132 L432 140 L436 144 L442 151 L446 157 L450 158 L456 157 L462 156 L458 166 L452 174 L444 180 L440 186 L438 194 L440 202 L436 210 L430 218 L430 226 L426 232 L422 238 L416 246 L410 248 L400 250 L396 246 L392 238 L388 228 L384 216 L386 204 L384 192 L378 184 L378 172 L372 171 L364 168 L354 170 L344 171 L334 165 L328 156 L326 150 L328 144 L328 138 L332 130 L340 122 L342 116 Z"/>
+            <path d="M458 204 L461 211 L459 218 L454 228 L450 230 L448 220 L448 214 L452 208 Z"/>
+            <path d="M342 93 L342 103 L346 106 L349 108 L356 107 L360 102 L366 96 L374 93 L386 89 L398 96 L402 104 L406 107 L412 103 L420 107 L432 107 L430 114 L428 117 L430 121 L432 128 L436 136 L442 146 L447 155 L450 155 L458 152 L466 146 L474 141 L478 135 L470 130 L462 128 L456 121 L459 120 L466 125 L473 126 L478 129 L484 130 L493 130 L496 134 L499 137 L505 142 L507 149 L512 160 L515 164 L519 159 L521 153 L524 146 L532 140 L536 137 L543 135 L545 139 L548 148 L555 156 L557 163 L561 169 L567 177 L566 169 L561 162 L560 156 L560 153 L564 155 L570 162 L573 159 L578 156 L579 152 L576 148 L573 143 L573 139 L576 137 L580 137 L587 135 L592 134 L596 131 L600 126 L603 122 L604 118 L601 114 L599 110 L603 106 L605 101 L609 100 L611 105 L613 110 L619 109 L619 105 L617 101 L621 95 L624 93 L630 93 L636 87 L641 82 L642 73 L638 67 L646 62 L654 61 L664 62 L673 77 L676 74 L680 68 L684 64 L686 59 L700 60 L708 57 L717 55 L718 48 L712 42 L700 40 L680 38 L660 36 L640 35 L620 36 L600 34 L580 32 L560 30 L540 30 L520 35 L500 42 L480 41 L464 43 L450 45 L440 48 L432 46 L426 41 L412 38 L394 42 L384 50 L371 58 L372 63 L378 62 L382 64 L384 68 L392 63 L397 56 L402 49 L409 49 L408 56 L405 60 L412 60 L420 60 L414 61 L406 63 L402 67 L398 71 L388 72 L378 71 L370 73 L365 78 L360 81 L356 81 L350 83 L356 87 L357 92 Z"/>
+            <path d="M349 80 L362 78 L363 75 L360 73 L356 69 L352 65 L354 63 L350 63 L348 67 L350 70 L351 73 L349 77 Z"/>
+            <path d="M340 72 L348 70 L348 76 L340 77 Z"/>
+            <path d="M312 49 L324 47 L332 49 L330 52 L318 53 Z"/>
+            <path d="M269 60 L262 56 L254 49 L251 42 L246 35 L244 30 L296 30 L316 39 L306 43 L294 47 L278 55 Z"/>
+            <path d="M621 118 L624 113 L630 112 L634 111 L640 109 L642 105 L643 99 L646 96 L651 94 L648 91 L643 89 L641 93 L639 98 L640 103 L636 107 L630 109 L624 111 L620 115 Z"/>
+            <path d="M578 177 L584 171 L590 170 L594 166 L598 170 L596 177 L592 184 L586 187 L580 184 Z"/>
+            <path d="M551 169 L556 173 L566 182 L572 191 L570 192 L564 188 L558 182 L553 175 Z"/>
+            <path d="M571 192 L580 193 L589 195 L588 197 L578 196 L572 194 Z"/>
+            <path d="M598 179 L602 177 L604 182 L603 188 L600 191 L599 186 L601 183 Z"/>
+            <path d="M622 182 L630 184 L638 185 L646 188 L654 192 L656 195 L648 196 L640 196 L632 192 L625 187 Z"/>
+            <path d="M600 143 L604 144 L603 149 L601 152 L600 148 Z"/>
+            <path d="M604 161 L610 161 L613 165 L608 169 L604 165 Z"/>
+            <path d="M520 161 L524 163 L523 168 L520 168 L520 164 Z"/>
+            <path d="M190 136 L199 134 L209 139 L212 139 L204 140 L196 138 Z"/>
+            <path d="M211 140 L220 140 L223 143 L216 144 L211 143 Z"/>
+            <path d="M587 232 L586 228 L588 224 L596 220 L604 214 L612 208 L618 210 L622 205 L625 203 L632 204 L631 210 L634 212 L639 215 L643 206 L645 202 L648 209 L652 218 L658 222 L662 228 L666 232 L667 237 L664 245 L660 252 L653 258 L646 257 L640 256 L631 250 L624 244 L612 245 L602 248 L594 250 L590 249 L590 240 Z"/>
+            <path d="M650 262 L657 262 L655 267 L651 265 Z"/>
+            <path d="M706 249 L711 253 L717 255 L713 261 L709 263 L710 258 Z"/>
+            <path d="M705 261 L709 263 L706 267 L699 273 L693 272 L697 268 L702 265 Z"/>
+        </g>
+        <!-- the belt: tropic of Cancer to tropic of Capricorn -->
+        <rect class="belt-band" x="0" y="133" width="720" height="94" fill="#DFA050" opacity=".3"/>
+        <line x1="0" y1="133" x2="720" y2="133" stroke="#DFA050" stroke-width="1.5" opacity=".5" stroke-dasharray="3 6"/>
+        <line x1="0" y1="227" x2="720" y2="227" stroke="#DFA050" stroke-width="1.5" opacity=".5" stroke-dasharray="3 6"/>
+        <line class="equator" x1="0" y1="180" x2="720" y2="180" stroke="#DFA050" stroke-width="2.5"/>
+        <g font-size="12" fill="#C7B295" text-anchor="end">
+          <text x="712" y="128">23°N</text>
+          <text x="712" y="242">23°S</text>
+        </g>
+        <!-- tonight's three origins, at true coordinates -->
+        <g font-size="15" fill="#F4E8D3">
+          <g class="origin-dot o1">
+            <circle class="ping" cx="192" cy="161" r="8" fill="none" stroke="#C4623A" stroke-width="2"/>
+            <circle cx="192" cy="161" r="6.5" fill="#C4623A" stroke="#F4E8D3" stroke-width="1.5"/>
+            <line x1="186" y1="156" x2="176" y2="148" stroke="#C7B295" stroke-width="1.5"/>
+            <text x="172" y="144" text-anchor="end">Costa Rica</text>
+          </g>
+          <g class="origin-dot o2">
+            <circle class="ping" cx="209" cy="171" r="8" fill="none" stroke="#C4623A" stroke-width="2"/>
+            <circle cx="209" cy="171" r="6.5" fill="#C4623A" stroke="#F4E8D3" stroke-width="1.5"/>
+            <line x1="214" y1="177" x2="222" y2="186" stroke="#C7B295" stroke-width="1.5"/>
+            <text x="226" y="192">Colombia</text>
+          </g>
+          <g class="origin-dot o3">
+            <circle class="ping" cx="437" cy="167" r="8" fill="none" stroke="#C4623A" stroke-width="2"/>
+            <circle cx="437" cy="167" r="6.5" fill="#C4623A" stroke="#F4E8D3" stroke-width="1.5"/>
+            <text x="453" y="172">Ethiopia</text>
+          </g>
+        </g>
+        <text x="360" y="348" text-anchor="middle" fill="#C7B295" font-size="14" letter-spacing="2">TROPIC TO TROPIC · THE BEAN BELT</text>
+      </svg>
+    </div>
+  </div>
+  <div class="notes" hidden>
+    <div class="row"><b>Setup</b><span class="nt">Point at the belt, then read the four variety names off the bags in your hand.</span></div>
+    <div class="row"><b>Land</b><span class="nt">Belt = tropics band. Variety = the plant's grape. All four varieties are physically on the table.</span></div>
+    <div class="row"><b>Pour</b><span class="nt">No pour. Keep momentum, altitude is next.</span></div>
+    <div class="row"><b>Time</b><span class="nt">2:00</span></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 5 · ALTITUDE · target 2:00
+     GAG PAYOFF: "over 2,000 meters?" from the sketch, paid off
+     with the REAL numbers: Yaye 2,200-2,300 and Cortes 2,015 clear
+     the bar; Don Eli 1,700 and El Diviso 1,700-1,900 do not, and
+     taste spectacular anyway. Mountains rise, markers climb.
+     ============================================================ -->
+<section class="slide" aria-label="Slide 5: altitude">
+  <div class="frame grid2">
+    <div>
+      <div class="eyebrow">Altitude <span class="clock">2:00</span></div>
+      <h1 class="display">"Over 2,000 meters?"</h1>
+      <p class="truth">Higher farms are cooler. The cherry ripens <b>slowly</b>, so the seed packs in more sugars and acids and grows <b>denser</b>. That is why high-grown coffee tends to taste brighter and more complex. But it is a <b>tendency, not a scoreboard</b>: two of tonight's coffees clear the snob's bar, two do not, and all four are excellent.</p>
+      <p class="footnote">Colombia Cortes clears it by 15 meters. Roughly one rooftop.</p>
+    </div>
+    <div>
+      <svg class="stage" viewBox="0 0 720 470" role="img" aria-label="Mountains with four coffees plotted at their true elevations against a dashed line at two thousand meters">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2C1F15"/><stop offset="1" stop-color="#20150E"/>
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="720" height="430" fill="url(#sky)" rx="18"/>
+        <g>
+          <polygon class="mtn m1" points="40,430 220,120 400,430" fill="#3A2A1C"/>
+          <polygon class="mtn m2" points="250,430 460,70 660,430" fill="#4A3524"/>
+          <polygon class="mtn m3" points="470,430 600,190 720,430" fill="#33241770" />
+          <polygon class="mtn m2" points="392,190 460,70 528,190 494,168 460,190 426,168" fill="#E8D3A8" opacity=".9"/>
+        </g>
+        <!-- the 2,000 m line -->
+        <line class="altline" x1="30" y1="142" x2="690" y2="142" stroke="#DFA050" stroke-width="3"/>
+        <g class="altline-tag"><rect x="30" y="108" width="176" height="28" rx="8" fill="#DFA050"/>
+          <text x="118" y="127" text-anchor="middle" fill="#20150E" font-size="15" font-weight="700">2,000 m · "the bar"</text></g>
+        <!-- markers at true scale: 0 m = y430, 2,000 m = y142, so y = 430 - m * 0.144.
+             Cortes lands 2 px above the line: 15 meters, roughly one rooftop. -->
+        <g font-size="14" fill="#F4E8D3">
+          <g class="marker k1" style="--rise:245px">
+            <circle cx="140" cy="185" r="9" fill="#C4623A"/>
+            <text x="140" y="210" text-anchor="middle">Don Eli</text><text x="140" y="228" text-anchor="middle" fill="#C7B295">1,700 m</text>
+          </g>
+          <g class="marker k2" style="--rise:259px">
+            <circle cx="300" cy="171" r="9" fill="#C4623A"/>
+            <text x="300" y="196" text-anchor="middle">El Diviso</text><text x="300" y="214" text-anchor="middle" fill="#C7B295">1,700 to 1,900 m</text>
+          </g>
+          <g class="marker k3" style="--rise:290px">
+            <circle cx="460" cy="140" r="9" fill="#DFA050"/>
+            <text x="460" y="120" text-anchor="middle">Cortes</text><text x="460" y="102" text-anchor="middle" fill="#C7B295">2,015 m</text>
+          </g>
+          <g class="marker k4" style="--rise:324px">
+            <circle cx="620" cy="106" r="9" fill="#DFA050"/>
+            <text x="620" y="86" text-anchor="middle">Yaye</text><text x="620" y="68" text-anchor="middle" fill="#C7B295">2,200 to 2,300 m</text>
+          </g>
+        </g>
+        <text x="360" y="458" text-anchor="middle" fill="#C7B295" font-size="14" letter-spacing="2">TONIGHT'S LINEUP, AT TRUE ELEVATION</text>
+      </svg>
+    </div>
+  </div>
+  <div class="notes" hidden>
+    <div class="row"><b>Setup</b><span class="nt">Quote the sketch once: "over 2,000 meters?" Then show the chart and let the real numbers talk.</span></div>
+    <div class="row"><b>Land</b><span class="nt">Cooler → slower ripening → denser seed, more sugars and acids → brighter cup. Tendency, not scoreboard. The 1,700s are excellent anyway.</span></div>
+    <div class="row"><b>Pour</b><span class="nt">No pour yet. Tease: "you will taste the 2,250 star in a few minutes."</span></div>
+    <div class="row"><b>Time</b><span class="nt">2:00</span></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 6 · BLEND VS SINGLE ORIGIN · target 4:00
+     TASTING CUE: En Masse (blend) vs one single origin, side by
+     side. Animated pours: three streams into one cup vs one stream.
+     ============================================================ -->
+<section class="slide" aria-label="Slide 6: blend versus single origin">
+  <div class="frame grid2">
+    <div>
+      <div class="eyebrow">Side by side <span class="clock">3:30</span></div>
+      <h1 class="display">Blend vs single origin.</h1>
+      <p class="truth">A <b>blend</b> combines several origins so every bag tastes the same: built for consistency, balance, and milk. A <b>single origin</b> is one farm, one harvest: it tastes like a place, and it changes with the seasons. <b>Different jobs. Neither is better.</b></p>
+      <div class="cue taste"><span class="dot"></span>Taste: En Masse next to a single origin, back and forth</div>
+      <p class="footnote">Sip the blend, sip the single origin, then the blend again. The difference shows up on the second pass.</p>
+    </div>
+    <div>
+      <svg class="stage" viewBox="0 0 560 420" role="img" aria-label="Three streams pouring into one blend cup beside a single stream pouring into a single-origin cup">
+        <g stroke-width="9">
+          <path class="pour q1" d="M70 40 q10 90 60 140 q22 22 22 60" stroke="#C4623A"/>
+          <path class="pour q2" d="M152 40 q0 110 0 200" stroke="#DFA050"/>
+          <path class="pour q3" d="M234 40 q-10 90 -60 140 q-22 22 -22 60" stroke="#8A5A3B"/>
+          <path class="pour q4" d="M430 40 q0 110 0 200" stroke="#C4623A"/>
+        </g>
+        <g>
+          <path d="M92 240 h120 l-14 96 q-2 14 -16 14 h-60 q-14 0 -16 -14 z" fill="#3A2A1C" stroke="#C7B295" stroke-width="2.5"/>
+          <path d="M212 258 a24 24 0 0 1 0 52" fill="none" stroke="#C7B295" stroke-width="6"/>
+          <ellipse cx="152" cy="252" rx="52" ry="9" fill="#5E3B24"/>
+          <text x="152" y="386" text-anchor="middle" fill="#F4E8D3" font-size="16" font-weight="700">THE BLEND</text>
+          <text x="152" y="406" text-anchor="middle" fill="#C7B295" font-size="13">consistency · balance · milk's best friend</text>
+        </g>
+        <g>
+          <path d="M370 240 h120 l-14 96 q-2 14 -16 14 h-60 q-14 0 -16 -14 z" fill="#3A2A1C" stroke="#C7B295" stroke-width="2.5"/>
+          <path d="M490 258 a24 24 0 0 1 0 52" fill="none" stroke="#C7B295" stroke-width="6"/>
+          <ellipse cx="430" cy="252" rx="52" ry="9" fill="#8a4a30"/>
+          <text x="430" y="386" text-anchor="middle" fill="#F4E8D3" font-size="16" font-weight="700">THE SINGLE ORIGIN</text>
+          <text x="430" y="406" text-anchor="middle" fill="#C7B295" font-size="13">one farm · one harvest · tastes like a place</text>
+        </g>
+        <g font-size="13" fill="#C7B295" text-anchor="middle">
+          <text x="70" y="28">origin A</text><text x="152" y="28">origin B</text><text x="234" y="28">origin C</text><text x="430" y="28">one farm</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="notes" hidden>
+    <div class="row"><b>Setup</b><span class="nt">Two cups per person, labeled A and B. Do not say which is which until after the second sip.</span></div>
+    <div class="row"><b>Land</b><span class="nt">Blend = engineered consistency. Single origin = a snapshot of a place. Neither is better.</span></div>
+    <div class="row"><b>Pour</b><span class="nt">TASTE: 1 to 2 oz En Masse + 1 to 2 oz of one single origin (El Diviso works). Sip A, sip B, sip A.</span></div>
+    <div class="row"><b>Time</b><span class="nt">3:30</span></div>
+  </div>
+</section>
+<!-- ============================================================
+     SLIDE 7 · ROAST LEVELS · target 3:00
+     TASTING CUE (or observe): En Masse (medium) vs Big Riff (dark).
+     MYTH BUST: dark does not mean strong or more caffeine.
+     ============================================================ -->
+<section class="slide" aria-label="Slide 7: roast levels">
+  <div class="frame grid2">
+    <div>
+      <div class="eyebrow">Roast levels <span class="clock">3:00</span></div>
+      <h1 class="display">Dark ≠ strong.</h1>
+      <p class="truth">Roasting is a <b>trade</b>. The longer it goes: <b>acidity fades, body builds</b>, sugars caramelize, and the farm's flavor gives way to the roaster's flavor: chocolate, toast, smoke. On the darkest beans, oils rise to the surface, that is the shine.</p>
+      <p class="truth"><b>Strength</b> is set by how much coffee you brew per cup, not by the color. And caffeine between light and dark is <b>basically a tie</b>.</p>
+      <div class="cue taste"><span class="dot"></span>Taste or observe: En Masse (medium) vs Big Riff (dark)</div>
+    </div>
+    <div>
+      <svg class="stage" viewBox="0 0 560 400" role="img" aria-label="Five beans from light to dark above a bar showing origin flavor trading off with roast flavor">
+        <g>
+          <g class="bean-step"><ellipse cx="80"  cy="110" rx="42" ry="56" fill="#C89A6B"/><path d="M80 62 q-14 48 0 96" stroke="#8A5A38" stroke-width="6" fill="none"/></g>
+          <g class="bean-step"><ellipse cx="180" cy="110" rx="42" ry="56" fill="#A9764C"/><path d="M180 62 q-14 48 0 96" stroke="#6E4527" stroke-width="6" fill="none"/></g>
+          <g class="bean-step"><ellipse cx="280" cy="110" rx="42" ry="56" fill="#8A5A38"/><path d="M280 62 q-14 48 0 96" stroke="#54341C" stroke-width="6" fill="none"/></g>
+          <g class="bean-step"><ellipse cx="380" cy="110" rx="42" ry="56" fill="#5E3B24"/><path d="M380 62 q-14 48 0 96" stroke="#3A2314" stroke-width="6" fill="none"/></g>
+          <g class="bean-step"><ellipse cx="480" cy="110" rx="42" ry="56" fill="#31200F"/><path d="M480 62 q-14 48 0 96" stroke="#1E1207" stroke-width="6" fill="none"/><ellipse cx="466" cy="86" rx="12" ry="18" fill="#F4E8D3" opacity=".14"/></g>
+        </g>
+        <g font-size="14" fill="#C7B295" text-anchor="middle">
+          <text x="180" y="196" fill="#F4E8D3">EN MASSE · medium</text>
+          <text x="180" y="216" font-size="12">brighter · acidity intact</text>
+          <text x="480" y="196" fill="#F4E8D3">BIG RIFF · dark</text>
+          <text x="480" y="216" font-size="12">heavier body · oils on the surface</text>
+        </g>
+        <path d="M180 222 v10 M480 222 v10" stroke="#C7B295" stroke-width="2"/>
+        <!-- the trade, as one bar -->
+        <defs><linearGradient id="trade" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#C4623A"/><stop offset="1" stop-color="#31200F"/>
+        </linearGradient></defs>
+        <rect class="fadebar" x="40" y="248" width="480" height="26" rx="13" fill="url(#trade)"/>
+        <g font-size="15" fill="#F4E8D3">
+          <text x="40" y="304">← more of the farm's flavor</text>
+          <text x="520" y="304" text-anchor="end">more of the roaster's flavor →</text>
+        </g>
+        <g>
+          <rect x="150" y="332" width="260" height="40" rx="20" fill="none" stroke="#DFA050" stroke-width="2.5"/>
+          <text x="280" y="358" text-anchor="middle" fill="#DFA050" font-size="16" font-weight="700">caffeine: basically a tie</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="notes" hidden>
+    <div class="row"><b>Setup</b><span class="nt">Hold up both bags. The color difference is visible from across the room.</span></div>
+    <div class="row"><b>Land</b><span class="nt">Longer roast = less acidity, more body, more roast flavor, oils surface. Strength = brew ratio. Caffeine ≈ tie.</span></div>
+    <div class="row"><b>Pour</b><span class="nt">Short on time? Just SHOW the two brews side by side and pass one sip of Big Riff. This is the slide to shorten.</span></div>
+    <div class="row"><b>Time</b><span class="nt">3:00</span></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 8 · BREW METHODS · target 3:00
+     The three dials: grind, temperature, time. Immersion vs
+     percolation, with every common method plotted on one brew-time
+     line, espresso's 30 seconds to cold brew's 16 hours.
+     ============================================================ -->
+<section class="slide" aria-label="Slide 8: brew methods">
+  <div class="frame grid2">
+    <div>
+      <div class="eyebrow">How it gets brewed <span class="clock">3:00</span></div>
+      <h1 class="display">Every method is three dials.</h1>
+      <p class="truth"><b>Grind, temperature, time.</b> Hot water extracts fast. Cold water extracts slowly, so it borrows time instead. Pressure is a shortcut. And the grind matches the clock: fast methods want fine grounds, long methods want coarse.</p>
+      <div class="duo">
+        <div class="say casual"><div class="who">Immersion</div><p>The grounds sit in the water. French press, cold brew. Forgiving, full-bodied.</p></div>
+        <div class="say casual"><div class="who">Percolation</div><p>The water travels through the grounds. Pour over, drip. Cleaner, brighter.</p></div>
+      </div>
+      <p class="footnote"><b>Espresso</b> is percolation in a hurry: nine bars of pressure, done in about 30 seconds. <b>AeroPress</b> is a steep with a push at the end. And a <b>pod machine</b> is a tiny drip brewer with the dials preset. It counts. They all count.</p>
+    </div>
+    <div>
+      <svg class="stage" viewBox="0 0 720 430" role="img" aria-label="Common brew methods, pods included, plotted on one time line from thirty seconds to sixteen hours, colored by immersion or percolation">
+        <g font-size="13" fill="#C7B295">
+          <circle cx="70" cy="40" r="7" fill="#C4623A"/><text x="86" y="45">percolation · water passes through</text>
+          <circle cx="382" cy="40" r="7" fill="#DFA050"/><text x="398" y="45">immersion · grounds sit in the water</text>
+        </g>
+        <rect class="fadebar" x="50" y="246" width="620" height="4" rx="2" fill="#C7B295" opacity=".5"/>
+        <!-- brew-time line, log scale: 30 sec on the left, 16 hours on the right -->
+        <g font-size="14" fill="#F4E8D3" text-anchor="middle">
+          <g class="brew-dot b1">
+            <line x1="74" y1="242" x2="74" y2="196" stroke="#C7B295" stroke-width="2"/>
+            <circle cx="74" cy="248" r="10" fill="#C4623A"/>
+            <text x="74" y="176">espresso</text><text x="74" y="192" fill="#C7B295" font-size="12">30 sec · 9 bars</text>
+          </g>
+          <g class="brew-dot b7">
+            <line x1="98" y1="254" x2="98" y2="352" stroke="#C7B295" stroke-width="2"/>
+            <circle cx="98" cy="248" r="10" fill="#C4623A"/>
+            <text x="98" y="374">pod machine</text><text x="98" y="390" fill="#C7B295" font-size="12">≈ 40 sec · preset dials</text>
+          </g>
+          <g class="brew-dot b2">
+            <line x1="154" y1="254" x2="154" y2="296" stroke="#C7B295" stroke-width="2"/>
+            <circle cx="154" cy="248" r="10" fill="#DFA050" stroke="#C4623A" stroke-width="3.5"/>
+            <text x="154" y="318">AeroPress</text><text x="154" y="334" fill="#C7B295" font-size="12">1 to 2 min · hybrid</text>
+          </g>
+          <g class="brew-dot b3">
+            <line x1="212" y1="242" x2="212" y2="120" stroke="#C7B295" stroke-width="2"/>
+            <circle cx="212" cy="248" r="10" fill="#C4623A"/>
+            <text x="212" y="100">pour over</text><text x="212" y="116" fill="#C7B295" font-size="12">≈ 3 min</text>
+          </g>
+          <g class="brew-dot b4">
+            <line x1="268" y1="254" x2="268" y2="366" stroke="#C7B295" stroke-width="2"/>
+            <circle cx="268" cy="248" r="10" fill="#DFA050"/>
+            <text x="268" y="388">French press</text><text x="268" y="404" fill="#C7B295" font-size="12">≈ 4 min</text>
+          </g>
+          <g class="brew-dot b5">
+            <line x1="330" y1="242" x2="330" y2="196" stroke="#C7B295" stroke-width="2"/>
+            <circle cx="330" cy="248" r="10" fill="#C4623A"/>
+            <text x="330" y="176">drip machine</text><text x="330" y="192" fill="#C7B295" font-size="12">≈ 5 min</text>
+          </g>
+          <g class="brew-dot b6">
+            <line x1="636" y1="242" x2="636" y2="196" stroke="#C7B295" stroke-width="2"/>
+            <circle cx="636" cy="248" r="10" fill="#DFA050" stroke="#7A93A6" stroke-width="3.5"/>
+            <text x="636" y="176">cold brew</text><text x="636" y="192" fill="#C7B295" font-size="12">12 to 18 hrs · cold</text>
+          </g>
+        </g>
+        <g font-size="13" fill="#C7B295">
+          <text x="50" y="278">hot ≈ 90 to 96°C, minutes</text>
+          <text x="670" y="278" text-anchor="end">cold water, time does the work</text>
+        </g>
+        <g font-size="14" fill="#DFA050">
+          <text x="50" y="428">← finer grind, faster brew</text>
+          <text x="670" y="428" text-anchor="end">coarser grind, longer brew →</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="notes" hidden>
+    <div class="row"><b>Setup</b><span class="nt">"Everything from a pod machine to a 16-hour cold brew is the same three dials turned differently."</span></div>
+    <div class="row"><b>Land</b><span class="nt">Grind + temperature + time. Immersion = sits in the water (press, cold brew). Percolation = passes through (pour over, drip). Espresso = pressure shortcut. Grind matches the clock.</span></div>
+    <div class="row"><b>Pour</b><span class="nt">No new pour. If asked "what should I buy," the honest answer: whichever method fits your morning. This slide carries the thesis early: every dot on that line is a valid way to get coffee.</span></div>
+    <div class="row"><b>Time</b><span class="nt">3:00</span></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 9 · THE HERO TASTING + FLAVOR WHEEL · target 7:00
+     THE BEAT TO PROTECT. Wheel is generated in JS from the real
+     printed notes. Keys 1-4 (or clicks) highlight each coffee's
+     three notes. "I taste... coffee" is the opener, the genuine
+     delight of finding a note is the payoff.
+     ============================================================ -->
+<section class="slide s-wheel" aria-label="Slide 8: the flavor wheel tasting">
+  <div class="frame grid2">
+    <div>
+      <div class="eyebrow">The hero tasting <span class="clock">7:00</span></div>
+      <h1 class="display">"I taste... coffee."</h1>
+      <p class="lede">A valid start. Now cheat: read the printed notes first, then hunt them in the cup. Tasting notes are a treasure map, not a test.</p>
+      <div class="coffee-keys" id="coffeeKeys"></div>
+      <div class="cue taste"><span class="dot"></span>Taste: two or three of these, delicate to bold, small pours</div>
+      <div class="xtract">
+        <div class="say snob"><div class="who">Sour + thin?</div><p style="font-family:var(--body);font-style:normal">Under-extracted. The water took too little.</p></div>
+        <div class="say casual"><div class="who">Bitter + dry?</div><p>Over-extracted. The water took too much.</p></div>
+      </div>
+    </div>
+    <div>
+      <div class="wheelbox">
+        <svg class="stage wheel" id="wheelSvg" viewBox="0 0 500 500" role="img" aria-label="A flavor wheel of the twelve printed tasting notes across tonight's four single origins"></svg>
+        <div class="wheel-center"><div class="inner" id="wheelCenter">
+          <div class="cname">Tonight's twelve notes</div>
+          <div class="cmeta">four coffees, three notes each</div>
+        </div></div>
+      </div>
+      <p class="caption">Every word on this wheel is printed on a bag on this table.</p>
+    </div>
+  </div>
+  <div class="notes" hidden>
+    <div class="row"><b>Controls</b><span class="nt">You drive the wheel: keys 1 to 4 or tap a coffee name to spotlight its three notes on screen.</span></div>
+    <div class="row"><b>Setup</b><span class="nt">"I taste... coffee." Beat. Then hand out the map. Delight, not testing.</span></div>
+    <div class="row"><b>Land</b><span class="nt">Sour/thin = under (took too little). Bitter/dry = over (took too much). One sentence each.</span></div>
+    <div class="row"><b>Pour</b><span class="nt">TASTE 2 to 3 heroes, delicate to bold: El Diviso → Don Eli or Yaye → Cortes. 1 to 2 oz. Full pour order if self-serving after: baseline, El Diviso, Don Eli, Yaye, Cortes, En Masse, Big Riff. PROTECT THIS BEAT if running behind.</span></div>
+    <div class="row"><b>Time</b><span class="nt">7:00</span></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 10 · WATER + FRESHNESS · target 3:00
+     GAG PAYOFF: the fjord water "captured in the ancient fjords of
+     New Zealand" that has since GONE GREEN (the jar turns green on
+     stage; the only green in the whole deck). Then the flip: the
+     real freshness lever is the roast date, 14 days rested.
+     ============================================================ -->
+<section class="slide" aria-label="Slide 9: water and freshness">
+  <div class="frame grid2">
+    <div>
+      <div class="eyebrow">Gag payoff · the fjord <span class="clock">3:00</span></div>
+      <h1 class="display">About that water.</h1>
+      <div class="duo">
+        <div class="say snob"><div class="who">The Snob</div><p>"Captured in the ancient fjords of New Zealand."</p></div>
+        <div class="say casual"><div class="who">The Casual</div><p>"It's green now."</p></div>
+      </div>
+      <p class="truth">Your cup is about <b>98% water</b>, so water matters, and <b>clean filtered tap is plenty</b>. The freshness lever that actually matters is the <b>roast date</b> printed on the bag.</p>
+      <p class="footnote">Fresh-roasted coffee is loaded with CO2 and fights the brew: gassy, uneven, sour-edged. After about a week it settles, holds a <b>peak for a few weeks</b>, then slowly fades. Tonight's bags: roasted <b>June 22</b>, poured <b>July 6</b>. That is <b>14 days rested</b>, squarely in the filter sweet spot.</p>
+    </div>
+    <div>
+      <svg class="stage" viewBox="0 0 560 545" role="img" aria-label="A jar of fjord water slowly turning green, a coffee bag stamped fourteen days rested, and a freshness curve peaking between one and three weeks with tonight marked at day fourteen">
+        <!-- the jar: its water animates from clear to green -->
+        <g>
+          <rect x="96" y="70" width="150" height="230" rx="22" fill="none" stroke="#C7B295" stroke-width="4"/>
+          <rect x="88" y="46" width="166" height="30" rx="10" fill="#3A2A1C" stroke="#C7B295" stroke-width="3"/>
+          <rect class="jar-water" x="106" y="120" width="130" height="170" rx="14" fill="#BFD4DA"/>
+          <circle class="algae a1" cx="140" cy="180" r="7" fill="#5F8C5F"/>
+          <circle class="algae a2" cx="196" cy="230" r="9" fill="#5F8C5F"/>
+          <circle class="algae a3" cx="164" cy="262" r="6" fill="#5F8C5F"/>
+          <rect x="118" y="150" width="106" height="46" rx="6" fill="#F4E8D3"/>
+          <text x="171" y="169" text-anchor="middle" fill="#20150E" font-size="12" font-weight="700">ANCIENT FJORD Nº1</text>
+          <text x="171" y="186" text-anchor="middle" fill="#54341C" font-size="10" font-style="italic">est. a while ago · New Zealand</text>
+          <text x="171" y="336" text-anchor="middle" fill="#7BAF7B" font-size="15">status: gone green</text>
+        </g>
+        <path d="M270 200 h44 m-12 -11 l14 11 l-14 11" stroke="#DFA050" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- the real flex: the roast date -->
+        <g>
+          <path d="M356 96 h150 l-10 220 q-1 14 -15 14 h-100 q-14 0 -15 -14 z" fill="#3A2A1C" stroke="#C7B295" stroke-width="3"/>
+          <path d="M356 96 q75 26 150 0" fill="none" stroke="#C7B295" stroke-width="3"/>
+          <rect x="384" y="150" width="94" height="70" rx="8" fill="#F4E8D3"/>
+          <text x="431" y="176" text-anchor="middle" fill="#20150E" font-size="13" font-weight="700">ROASTED</text>
+          <text x="431" y="200" text-anchor="middle" fill="#20150E" font-size="16" font-weight="800">06 · 22 · 2026</text>
+          <g class="stamp">
+            <rect x="366" y="244" width="132" height="44" rx="10" fill="none" stroke="#DFA050" stroke-width="4"/>
+            <text x="432" y="272" text-anchor="middle" fill="#DFA050" font-size="16" font-weight="800">14 DAYS RESTED</text>
+          </g>
+          <text x="431" y="366" text-anchor="middle" fill="#C7B295" font-size="14">the flex that actually works</text>
+        </g>
+        <!-- the rest window: quality vs days since roast, day 14 = tonight -->
+        <g>
+          <path class="rest-path" d="M60 505 C 100 500, 118 458, 140 450 L 300 450 C 360 452, 450 470, 520 482" fill="none" stroke="#DFA050" stroke-width="4" stroke-linecap="round"/>
+          <g class="rest-dot">
+            <circle cx="221" cy="450" r="9" fill="#DFA050"/>
+            <text x="221" y="432" text-anchor="middle" fill="#F4E8D3" font-size="14" font-weight="700">day 14 · tonight</text>
+          </g>
+          <g class="rest-labels" font-size="13" fill="#C7B295" text-anchor="middle">
+            <text x="95" y="535">too fresh · gassy</text>
+            <text x="255" y="535">sweet spot · ≈ week 1 to 3</text>
+            <text x="455" y="535">slowly fading</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="notes" hidden>
+    <div class="row"><b>Setup</b><span class="nt">Bring back the fjord line word for word. Let the jar turn green in silence. Then flip.</span></div>
+    <div class="row"><b>Land</b><span class="nt">98% water, filtered is plenty. Real lever = roast date. Too fresh = CO2 fights the brew. Peak ≈ week 1 to 3, then fades. 06/22 → 07/06 = 14 days, sweet spot.</span></div>
+    <div class="row"><b>Pour</b><span class="nt">Hold up an actual bag and point at the printed date. Physical prop beats the slide.</span></div>
+    <div class="row"><b>Time</b><span class="nt">3:00</span></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 11 · FINALE · target 1:30
+     GAG PAYOFF: the sketch's sign-off "you just don't get coffee"
+     flips into the thesis. Callback montage of every running gag.
+     ============================================================ -->
+<section class="slide s-final" aria-label="Slide 11: finale">
+  <div class="frame">
+    <p class="dead">"You just don't get coffee."</p>
+    <h1 class="display final-line" style="font-size:clamp(42px,7vw,110px)">There is no wrong way<br>to get coffee.</h1>
+    <p class="lede final-line" style="margin:0 auto;max-width:44ch">Gatekeeping is the only bad brew. All seven coffees are staying on the table. Pour whatever looks good and go find your note.</p>
+    <div class="montage">
+      <span class="chip purple">the purple one</span>
+      <span class="chip">"over 2,000 meters?"</span>
+      <span class="chip green">fjord water (now green)</span>
+      <span class="chip">14 days rested</span>
+    </div>
+  </div>
+  <div class="notes" hidden>
+    <div class="row"><b>Setup</b><span class="nt">Quote the sign-off in the Snob voice one last time. Then flip it, warm and sincere.</span></div>
+    <div class="row"><b>Land</b><span class="nt">"Gatekeeping is the only bad brew." Point at the self-serve lineup, thank the room.</span></div>
+    <div class="row"><b>Pour</b><span class="nt">Full lineup goes self-serve. You are done in 30.</span></div>
+    <div class="row"><b>Time</b><span class="nt">1:30</span></div>
+  </div>
+</section>
+</main>
+
+<!-- Speaker notes drawer: press S. Shows the setup, the fact to land, the pour cue, and the clock. -->
+<div id="notesPanel" role="region" aria-label="Speaker notes"></div>
+
+<!-- Help overlay: press ? -->
+<div id="help" role="dialog" aria-label="Keyboard controls">
+  <div class="sheet">
+    <h3>Controls</h3>
+    <div class="krow"><span><kbd>→</kbd> <kbd>Space</kbd> <kbd>PgDn</kbd></span><span>next slide</span></div>
+    <div class="krow"><span><kbd>←</kbd> <kbd>PgUp</kbd></span><span>previous slide</span></div>
+    <div class="krow"><span><kbd>Home</kbd> / <kbd>End</kbd></span><span>first / last slide</span></div>
+    <div class="krow"><span><kbd>Enter</kbd> or click (slide 1)</span><span>play / pause the sketch</span></div>
+    <div class="krow"><span><kbd>1</kbd> to <kbd>4</kbd></span><span>spotlight a coffee on the flavor wheel</span></div>
+    <div class="krow"><span><kbd>S</kbd></span><span>speaker notes</span></div>
+    <div class="krow"><span><kbd>F</kbd></span><span>fullscreen</span></div>
+    <div class="krow"><span><kbd>?</kbd> / <kbd>Esc</kbd></span><span>toggle / close this</span></div>
+    <div class="krow"><span>click left / right third</span><span>previous / next</span></div>
+  </div>
+</div>
+<script>
+/* ================= DECK ENGINE ================= */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const slides=$$('.slide'), N=slides.length;
+const bar=$('#bar'), counter=$('#counter'), notesPanel=$('#notesPanel'), help=$('#help');
+const video=$('#sketch'), playBtn=$('#playBtn');
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let cur=0;
+
+function go(n){
+  n=Math.max(0,Math.min(N-1,n));
+  if(n===cur && slides[cur].classList.contains('active')) return;
+  /* leaving slide 1: auto-pause and reset the video so it is fresh on return */
+  if(cur===0 && n!==0 && video){ video.pause(); try{video.currentTime=0}catch(e){} playBtn.classList.remove('hide'); }
+  slides[cur].classList.remove('active');
+  cur=n;
+  slides[cur].classList.add('active');
+  counter.textContent=(cur+1)+' / '+N;
+  bar.style.width=(cur/(N-1)*100)+'%';
+  /* speaker notes follow the current slide */
+  const notes=slides[cur].querySelector('.notes');
+  notesPanel.innerHTML=notes?notes.innerHTML:'<div class="row"><span class="nt">No notes for this slide.</span></div>';
+}
+slides[0].classList.add('active');
+bar.style.width='0%';
+counter.textContent='1 / '+N;
+notesPanel.innerHTML=slides[0].querySelector('.notes').innerHTML;
+
+/* ================= VIDEO WIRING (slide 1 only) =================
+   Enter or a click on the video toggles playback; the big play
+   button hides while playing; when it ends we prompt the presenter
+   to advance. Arrow keys are never captured by the video. */
+if(video){
+  const toggleVideo=()=>{ if(video.paused){ video.play().catch(()=>{}); } else { video.pause(); } };
+  playBtn.addEventListener('click',e=>{e.stopPropagation();toggleVideo();});
+  video.addEventListener('click',toggleVideo);
+  video.addEventListener('play',()=>playBtn.classList.add('hide'));
+  video.addEventListener('pause',()=>{ if(!video.ended) playBtn.classList.remove('hide'); });
+  video.addEventListener('ended',()=>playBtn.classList.remove('hide'));
+  window.__toggleVideo=toggleVideo;
+}
+
+/* ================= FLAVOR WHEEL (slide 8) =================
+   Generated from the REAL printed notes on tonight's bags.
+   Twelve segments, four coffees, keys 1-4 highlight a coffee. */
+const COFFEES=[
+ {key:'1',name:'Costa Rica Don Eli Tematica',meta:'heirloom · 1,700 m',color:'#C4623A',shades:['#C4623A','#B25232','#D3714A'],notes:['hibiscus','raspberry','caramel']},
+ {key:'2',name:'Ethiopia Yaye',meta:'bishari · 2,200 to 2,300 m',color:'#DFA050',shades:['#DFA050','#CB8E42','#EBB066'],notes:['cranberry','baking spice','papaya']},
+ {key:'3',name:'Colombia El Diviso',meta:'pink bourbon · 1,700 to 1,900 m',color:'#B76A7E',shades:['#B76A7E','#A45A6E','#C77E92'],notes:['strawberry','honeycomb','jasmine']},
+ {key:'4',name:'Colombia Carlos Efrain Cortes',meta:'Castillo · 2,015 m',color:'#8A5A3B',shades:['#8A5A3B','#7A4C30','#9C6A48'],notes:['limoncello','blackberry','cocoa']}
+];
+const wheelSvg=$('#wheelSvg'), wheelCenter=$('#wheelCenter'), coffeeKeys=$('#coffeeKeys');
+(function buildWheel(){
+  const cx=250,cy=250,r0=118,r1=232,total=12,step=2*Math.PI/total;
+  const ns='http://www.w3.org/2000/svg';
+  const rot=document.createElementNS(ns,'g'); rot.setAttribute('class','wheel-rot');
+  let i=0;
+  COFFEES.forEach((c,ci)=>{
+    c.notes.forEach((note,ni)=>{
+      const a0=i*step-Math.PI/2, a1=(i+1)*step-Math.PI/2, pad=0.012;
+      const p=(a,r)=>[cx+r*Math.cos(a),cy+r*Math.sin(a)];
+      const [x0,y0]=p(a0+pad,r1),[x1,y1]=p(a1-pad,r1),[x2,y2]=p(a1-pad,r0),[x3,y3]=p(a0+pad,r0);
+      const d=`M${x0} ${y0} A${r1} ${r1} 0 0 1 ${x1} ${y1} L${x2} ${y2} A${r0} ${r0} 0 0 0 ${x3} ${y3} Z`;
+      const g=document.createElementNS(ns,'g');
+      g.setAttribute('class','seg c'+ci); g.dataset.coffee=ci;
+      const path=document.createElementNS(ns,'path');
+      path.setAttribute('d',d); path.setAttribute('fill',c.shades[ni]);
+      g.appendChild(path);
+      /* radial label, flipped on the left half so it never reads upside down */
+      const mid=(a0+a1)/2, lr=(r0+r1)/2, [lx,ly]=p(mid,lr);
+      let deg=mid*180/Math.PI; let anchorFlip=(deg>90||deg<-90);
+      const t=document.createElementNS(ns,'text');
+      t.setAttribute('x',lx); t.setAttribute('y',ly);
+      t.setAttribute('text-anchor','middle'); t.setAttribute('dominant-baseline','middle');
+      t.setAttribute('fill','#F4E8D3'); t.setAttribute('font-size','16'); t.setAttribute('font-weight','600');
+      t.setAttribute('transform',`rotate(${anchorFlip?deg+180:deg} ${lx} ${ly})`);
+      t.textContent=note;
+      g.appendChild(t);
+      g.addEventListener('click',()=>pickCoffee(ci));
+      rot.appendChild(g);
+      i++;
+    });
+  });
+  const hub=document.createElementNS(ns,'circle');
+  hub.setAttribute('cx',cx);hub.setAttribute('cy',cy);hub.setAttribute('r',r0-8);
+  hub.setAttribute('fill','#2C1F15');hub.setAttribute('stroke','rgba(244,232,211,.16)');hub.setAttribute('stroke-width','2');
+  wheelSvg.appendChild(rot); wheelSvg.appendChild(hub);
+  /* selector buttons under the headline */
+  COFFEES.forEach((c,ci)=>{
+    const b=document.createElement('button');
+    b.textContent=c.name;
+    b.addEventListener('click',()=>pickCoffee(ci));
+    b.dataset.coffee=ci;
+    coffeeKeys.appendChild(b);
+  });
+})();
+let picked=-1;
+function pickCoffee(ci){
+  picked=(picked===ci)?-1:ci;
+  wheelSvg.classList.toggle('picked',picked>=0);
+  $$('#wheelSvg .seg').forEach(s=>s.classList.toggle('on',+s.dataset.coffee===picked));
+  $$('#coffeeKeys button').forEach(b=>b.classList.toggle('on',+b.dataset.coffee===picked));
+  if(picked>=0){
+    const c=COFFEES[picked];
+    wheelCenter.innerHTML=`<div class="cname">${c.name}</div><div class="cmeta">${c.meta}</div><div class="cnotes">${c.notes.join(' · ')}</div>`;
+  }else{
+    wheelCenter.innerHTML=`<div class="cname">Tonight's twelve notes</div><div class="cmeta">four coffees, three notes each</div>`;
+  }
+}
+
+/* ================= KEYBOARD =================
+   Arrows always navigate, even on the video slide; Enter is the
+   video's key there so no key ever does two jobs at once. */
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ help.classList.remove('open'); return; }
+  if(e.key==='?'){ help.classList.toggle('open'); e.preventDefault(); return; }
+  if(help.classList.contains('open')) return;
+  const k=e.key.toLowerCase();
+  if(k==='s'){ notesPanel.classList.toggle('open'); return; }
+  if(k==='f'){
+    if(document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen().catch(()=>{});
+    return;
+  }
+  /* slide 1: Enter plays/pauses the sketch and does nothing else */
+  if(cur===0 && e.key==='Enter'){ window.__toggleVideo && window.__toggleVideo(); e.preventDefault(); return; }
+  /* number keys are scoped to the flavor-wheel slide (presenter shortcut, documented in the notes) */
+  if('1234'.includes(e.key) && slides[cur].classList.contains('s-wheel')){ pickCoffee(+e.key-1); return; }
+  switch(e.key){
+    case 'ArrowRight': case ' ': case 'PageDown': go(cur+1); e.preventDefault(); break;
+    case 'ArrowLeft': case 'PageUp': go(cur-1); e.preventDefault(); break;
+    case 'Home': go(0); e.preventDefault(); break;
+    case 'End': go(N-1); e.preventDefault(); break;
+  }
+});
+help.addEventListener('click',e=>{ if(e.target===help) help.classList.remove('open'); });
+
+/* The corner key reminder fades once the presenter is under way, so
+   the projected slides carry no instructions. */
+const keyhint=$('#keyhint');
+setTimeout(()=>keyhint.classList.add('gone'),6000);
+document.addEventListener('keydown',()=>keyhint.classList.add('gone'),{once:true});
+
+/* Click zones: outer thirds navigate; the video, buttons, and the
+   notes drawer keep their own clicks. */
+document.addEventListener('click',e=>{
+  if(e.target.closest('button, .videowrap, #notesPanel, #help, a, .coffee-keys, .wheel')) return;
+  const x=e.clientX/innerWidth;
+  if(x>0.66) go(cur+1); else if(x<0.33) go(cur-1);
+});
+
+/* Reduced motion: the wheel skips its spin (CSS already stops it,
+   this guards any browser that only partially honors the query). */
+if(reduceMotion){ const r=$('.wheel-rot'); if(r) r.style.animation='none'; }
+</script>
+</body>
+</html>
